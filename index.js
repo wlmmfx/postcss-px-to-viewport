@@ -31,6 +31,7 @@ module.exports = postcss.plugin('postcss-px-to-viewport', function (options) {
   var landscapeRules = [];
   
   return function (css) {
+    var landscapeRoot = new postcss.atRule({ params: '(orientation: landscape)', name: 'media', nodes: [] });
     css.walkRules(function (rule) {
       // Add exclude option to ignore some files like 'node_modules'
       var file = rule.source && rule.source.input.file;
@@ -62,7 +63,8 @@ module.exports = postcss.plugin('postcss-px-to-viewport', function (options) {
         });
         
         if (landscapeRule.nodes.length > 0) {
-          landscapeRules.push(landscapeRule); 
+          // landscapeRules.push(landscapeRule); 
+          landscapeRoot.append(landscapeRule); 
         }
       }
 
@@ -96,14 +98,15 @@ module.exports = postcss.plugin('postcss-px-to-viewport', function (options) {
       });
     });
     
-    if (landscapeRules.length > 0) {
-      var landscapeRoot = new postcss.atRule({ params: '(orientation: landscape)', name: 'media' });
+    // if (landscapeRules.length > 0) {
+    //   var landscapeRoot = new postcss.atRule({ params: '(orientation: landscape)', name: 'media' });
       
-      landscapeRules.forEach(function(rule) {
-        landscapeRoot.append(rule);
-      });
-      css.append(landscapeRoot);
-    }
+    //   landscapeRules.forEach(function(rule) {
+    //     landscapeRoot.append(rule);
+    //   });
+    //   css.append(landscapeRoot);
+    // }
+    css.append(landscapeRoot);
   };
 });
 
